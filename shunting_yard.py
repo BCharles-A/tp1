@@ -3,12 +3,10 @@ num = ("0","1","2","3","4","5","6","7","8","9", ".")
 def tokenize(expression: str) -> list[str]:
     try:
         token = list(expression)
-        for i in range(len(token)):
-            position = [index for index ,x in enumerate(token) if x in num]
-        for i in range(len(position)):
-            if(position[i]+1 == position[i+1]):
-                token[position[i]] = token[position[i]],token[position[i+1]]
-                token[position[i+1]]
+        for i in range(len(token)-1):
+            while (token[i] in num and token[i+1] in num):
+                token[i] = token[i] + token[i+1]
+                token.pop(i+1)
     except Exception as e:
         print(e)
     return token
@@ -20,7 +18,7 @@ def tokenize(expression: str) -> list[str]:
     valeur = []
     print(infix)
     for i in range(len(infix)):
-#        try:
+        try:
             if(infix[i] in operateur):
                 listop.append(infix[i])
                 match infix[i]:
@@ -36,8 +34,8 @@ def tokenize(expression: str) -> list[str]:
                 postfix.append(infix[i])
             else:
                 print("Expression invalide")
-#        except Exception as e:
-#            print(e)
+        except Exception as e:
+            print(e)
     for i in range(len(listop)):
          postfix.append(listop[i])
     return postfix
