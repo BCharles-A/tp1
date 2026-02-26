@@ -13,9 +13,6 @@ def tokenize(expression: str) -> list[str]:
                 if(i == 0 or token[i-1] in operateur and token[i-1] != ")"):   
                       while(token[i+1] in num):
                         token[i] = token[i] + token.pop(i+1)
-                else:
-                    while(token[i+1] in num):
-                        token[i] = token[i] + token.pop(i+1)
             if(token[i] in num):
                 if(i+1 <= len(token)-1):
                     while(token[i+1] in num):
@@ -35,35 +32,70 @@ def tokenize(expression: str) -> list[str]:
         print(e)
     return token
 
-"""def infix_to_postfix(tokens: list[str]) -> list[str]:
+valeur_op = {
+        "+": 1,
+        "-": 1,
+        "/": 2,
+        "*": 2,
+        "^": 3,
+        "(": 4,
+        ")": 4
+    }
+print(valeur_op.get("+"))
+def infix_to_postfix(tokens: list[str]) -> list[str]:
     infix = tokenize(tokens)
-    postfix = []
+    listnum = []
     listop = []
-    valeur = []
-    print(infix)
+    listpost = []
     for i in range(len(infix)):
         try:
-            if(infix[i] in operateur):
+            float(infix[i])
+            num = True
+        except ValueError:
+            num = False
+        if(num):
+            listnum.append(infix[i])
+        else:
+            if(listop == []):
                 listop.append(infix[i])
-                match infix[i]:
-                    case "+", "-":
-                        valeur.append(0)
-                    case "/", "*":
-                        valeur.append(1)
-                    case "^":
-                        valeur.append(2)
-                    case "(" , ")":
-                        valeur.append(3)
-            elif(infix[i] in num):
-                postfix.append(infix[i])
+            elif(valeur_op.get(listop[-1])>valeur_op.get(infix[i])):
+                listnum.append(listop.pop(-1))
+                listop.append(infix[i])
             else:
-                print("Expression invalide")
-        except Exception as e:
-            print(e)
+                listop.append(infix[i])
     for i in range(len(listop)):
-         postfix.append(listop[i])
+        listnum.append(listop[i])
+    return listnum
+num_change = {
+        "+": 1,
+        "-": 2,
+        "/": 3,
+        "*": 4,
+        "^": 5,
+    }
+"""
+def evaluate_postfix(tokens:list[str]) -> float:
+    postfix = infix_to_postfix(tokens)
+    i=0
+    while postfix != []:
+        if(postfix[i] in operateur and postfix[i] != "(", ")", "^"):
+            num_change.get(postfix[i])
+            x= float(postfix.pop(i-1))
+            y= float(postfix.pop(i-1))
+            match postfix[i]:
+                case "+":
+                    valeur = x+y
+                case "-":
+                    valeur = x-y
+                case "/":
+                    valeur = x/y
+                case "*":
+                    valeur = x*y
+            postfix.insert(valeur,0) 
+        i+=1
     return postfix
 """
-
-operation ="-283.52/222+32*(-22)-3.2"
+operation ="-283.52/222+32*22-3.2"
 print(tokenize(operation))
+print(infix_to_postfix(operation))
+#print(evaluate_postfix(operation))
