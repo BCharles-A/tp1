@@ -90,7 +90,7 @@ def evaluate_postfix(tokens) -> float:
     postfix = infix_to_postfix(tokens)
     while len(postfix) > 1:
         for i in range(len(postfix)):
-            if(postfix[i] in operateur and postfix[i] != "^"):
+            if(postfix[i] in operateur):
                 x= float(postfix[i-1])
                 y= float(postfix[i-2])
                 match postfix[i]:
@@ -102,6 +102,8 @@ def evaluate_postfix(tokens) -> float:
                         valeur = x/y
                     case "*":
                         valeur = x*y
+                    case "^":
+                        valeur = y**x
                 postfix.pop(i)
                 postfix.pop(i-1)
                 postfix.pop(i-2)
@@ -109,7 +111,7 @@ def evaluate_postfix(tokens) -> float:
                 break
     return postfix
 
-operation ="(1+3*-22)*4+2"
+operation ="5^2"
 
 print(tokenize(operation))
 print(infix_to_postfix(operation))
