@@ -99,7 +99,7 @@ def evaluate_postfix(tokens) -> float:
                     case "-":
                         valeur = x-y
                     case "/":
-                        valeur = x/y
+                        valeur = y/x
                     case "*":
                         valeur = x*y
                     case "^":
@@ -111,7 +111,7 @@ def evaluate_postfix(tokens) -> float:
                 break
     return postfix
 
-operation ="5^2"
+operation ="5/2"
 
 print(tokenize(operation))
 print(infix_to_postfix(operation))
