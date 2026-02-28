@@ -1,4 +1,4 @@
-from shunting_yard import infix_to_postfix, tokenize#### ce fichier est généré par IA
+from shunting_yard import infix_to_postfix, tokenize, evaluate_postfix#### ce fichier est généré par IA
 
 TEST_EXPRESSIONS = {
     # valides
@@ -35,7 +35,7 @@ def run_tests():
     print("Running tokenize tests:\n")
     for name, expr in TEST_EXPRESSIONS.items():
         try:
-            tokens = infix_to_postfix(expr)
+            tokens = evaluate_postfix(expr)
             print(f"{name}: OK -> {tokens}")
         except Exception as e:
             print(f"{name}: EXCEPTION -> {e}")
