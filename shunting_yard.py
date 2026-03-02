@@ -4,6 +4,8 @@ def tokenize(expression: str) -> list[str]:
     compteur = 0
     try:
         token = list(expression.replace(" ", ""))
+        if(token == []):
+            raise Exception("Expression vide")
         for element in token:
             if(element not in operateur and element not in num):
                 raise Exception("Expression invalide")
@@ -12,16 +14,22 @@ def tokenize(expression: str) -> list[str]:
             if(element == ")"):
                 compteur -= 1
             if(compteur < 0):
-                raise Exception("Expression invalide, Parenthèses mal fermées")
+                raise Exception("Expression invalide")
         if(compteur != 0):
-            raise Exception("Expression invalide, Parenthèses non fermées")
+            raise Exception("Expression invalide")
         token.append("!")
         i = 0
         while(token[i] != "!"):
             if(token[i] == "-"):
-                if(i == 0 or token[i-1] in operateur and token[i-1] != ")"):   
-                      while(token[i+1] in num):
+                if(i == 0 or token[i-1] in operateur and token[i-1] != ")"):  
+                    while(token[i+1] in num):
                         token[i] = token[i] + token.pop(i+1)
+                    if(token[i+1]=="("):
+                        token[i] = token[i] + "1"
+                        token.insert(i+1,"*")
+                        i=i+1
+                else:
+                    pass
             if(token[i] in num):
                 if(i+1 <= len(token)-1):
                     while(token[i+1] in num):
@@ -31,15 +39,24 @@ def tokenize(expression: str) -> list[str]:
             i += 1
         for i in range(len(token)):
             if(token[i].count(".") > 1):
-                raise Exception("Expression invalide, Trop de points")
+                raise Exception("Invalide, Trop de points")
             if(token[i].startswith(".")):
                 token[i] = "0" + token[i]
             if(token[i].endswith(".")):
                 token[i] = token[i] + "0"
+            if(token[i] == "."):
+                token[i] = "0.0"
+            if(token[i] in operateur and token[i] != "(" and token[i] != ")"):
+                if(i == 0 or token[i-1] in operateur and token[i-1] != ")"):
+                    raise Exception("Expression invalide")
+        if(token[-2] in operateur and token[-2] != ")"):
+            raise Exception("Expression invalide")
+            
         token.remove("!")
+        return token
     except Exception as e:
         print(e)
-    return token
+        raise
 
 valeur_op = {
         "+": 1,
@@ -75,9 +92,10 @@ def infix_to_postfix(tokens) -> list[str]:
             elif(listop == []):
                 listop.append(infix[i])
 
-            elif(valeur_op.get(listop[-1]) >= valeur_op.get(infix[i])):
-                listnum.append(listop.pop(-1))
-                listop.append(infix[i])
+            elif(listop != [] and valeur_op.get(listop[-1]) >= valeur_op.get(infix[i])):
+                    listnum.append(listop.pop(-1))
+                    listop.append(infix[i])
+                
 
             else:
                 listop.append(infix[i])
@@ -87,32 +105,37 @@ def infix_to_postfix(tokens) -> list[str]:
     return listnum
 
 def evaluate_postfix(tokens) -> float:
-    postfix = infix_to_postfix(tokens)
-    while len(postfix) > 1:
-        for i in range(len(postfix)):
-            if(postfix[i] in operateur):
-                x= float(postfix[i-1])
-                y= float(postfix[i-2])
-                match postfix[i]:
-                    case "+":
-                        valeur = x+y
-                    case "-":
-                        valeur = x-y
-                    case "/":
-                        valeur = y/x
-                    case "*":
-                        valeur = x*y
-                    case "^":
-                        valeur = y**x
-                postfix.pop(i)
-                postfix.pop(i-1)
-                postfix.pop(i-2)
-                postfix.insert(i-2,valeur)
-                break
-    return postfix
-
-operation ="5/2"
-
-print(tokenize(operation))
-print(infix_to_postfix(operation))
-print(evaluate_postfix(operation))
+    try:
+        postfix = infix_to_postfix(tokens)
+        while len(postfix) > 1:
+            for i in range(len(postfix)):
+                if(postfix[i] in operateur):
+                    y= float(postfix[i-1])
+                    x= float(postfix[i-2])
+                    match postfix[i]:
+                        case "+":
+                            valeur = x+y
+                        case "-":
+                            valeur = x-y
+                        case "/":
+                            valeur = x/y
+                        case "*":
+                            valeur = x*y
+                        case "^":
+                            valeur = x**y
+                    postfix.pop(i)
+                    postfix.pop(i-1)
+                    postfix.pop(i-2)
+                    postfix.insert(i-2,valeur)
+                    break
+        return float(postfix[0])
+    except ZeroDivisionError as e:
+        print("Division par zéro")
+        raise
+operation ="-3+4*2/(1-5)^2^3"
+try:
+    print(tokenize(operation))
+    print(infix_to_postfix(operation))
+    print(evaluate_postfix(operation))
+except Exception as e:
+    print(e)
