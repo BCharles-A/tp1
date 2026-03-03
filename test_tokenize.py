@@ -28,8 +28,21 @@ TEST_EXPRESSIONS = {
     "spaces_only": "   ",
     "long_number": "" + "9"*100 + "+1",
     "complex_negative": "-(-3)+4",
+    # additional valid expressions
+    "double_negative": "5--3",
+    "neg_after_op": "3*-2",
+    "power_associativity": "2^3^2",
+    "nested_parens": "((2+3)*4)",
+    "decimal_leading_zero": "0.5+0.25",
+    "decimal_trailing_zero": "12.0+3.0",
+    "large_expression": "1+2-3*4/5^6",
+    "white_space_mixed": "  3 +   4*  ( 2 -1 ) ",
+    # new invalid cases
+    "unmatched_paren": "(3+4",
+    "empty_parentheses": "5+()",
+    "invalid_decimal": "1..0 + 2",
+    "invalid_minus_minus": "4---2",
 }
-
 
 def run_tests():
     print("Running tokenize tests:\n")
