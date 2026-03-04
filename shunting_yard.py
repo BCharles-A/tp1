@@ -63,8 +63,8 @@ valeur_op = {
         "(": 0,
         ")": 0
     }
-def infix_to_postfix(tokens) -> list[str]:
-    infix = tokenize(tokens)
+
+def infix_to_postfix(infix:list[str]) -> list[str]:
     listnum = []
     listop = []
     for i in range(len(infix)):
@@ -103,9 +103,8 @@ def infix_to_postfix(tokens) -> list[str]:
         listnum.append(listop.pop(-1))
     return listnum
 
-def evaluate_postfix(tokens) -> float:
+def evaluate_postfix(postfix:list[str]) -> float:
     try:
-        postfix = infix_to_postfix(tokens)
         while len(postfix) > 1:
             for i in range(len(postfix)):
                 if(postfix[i] in operateur):
