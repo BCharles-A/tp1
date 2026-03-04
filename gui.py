@@ -9,9 +9,9 @@ def cliquer():
         montre_result.destroy()
         token  = tokenize(equation.get())
         postfix = infix_to_postfix(token)
+        result = evaluate_postfix(postfix)
         montre_postfix = tk.Label(fenetre, text=f"Postfix : {postfix}")
         montre_postfix.pack()
-        result = evaluate_postfix(postfix)
         montre_result = tk.Label(fenetre, text=f"Résultat : {result}")
         montre_result.pack()
     except ZeroDivisionError:
