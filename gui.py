@@ -9,7 +9,8 @@ def cliquer():
         montre_result.destroy()
         token  = tokenize(equation.get())
         postfix = infix_to_postfix(token)
-        result = evaluate_postfix(postfix)
+        var = postfix.copy()
+        result = evaluate_postfix(var)
         montre_postfix = tk.Label(fenetre, text=f"Postfix : {postfix}")
         montre_postfix.pack()
         montre_result = tk.Label(fenetre, text=f"Résultat : {result}")
@@ -22,6 +23,7 @@ def cliquer():
         montre_result.pack()
 
 fenetre = tk.Tk()
+fenetre.title("Shunting Yard")
 fenetre.geometry("800x400")
 equation = tk.StringVar()
 montre_result = tk.Label(fenetre, text="")
