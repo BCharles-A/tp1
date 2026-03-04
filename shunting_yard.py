@@ -67,40 +67,35 @@ valeur_op = {
 def infix_to_postfix(infix:list[str]) -> list[str]:
     listnum = []
     listop = []
-    for i in range(len(infix)):
-        try:
-            float(infix[i])
-            num = True
-        except ValueError:
-            num = False
-        if(num):
-            listnum.append(infix[i])
+    for exp in infix:
+        if(exp not in operateur):
+            listnum.append(exp)
         else:
-            if(infix[i] == "("):
-                listop.append(infix[i])
+            if(exp == "("):
+                listop.append(exp)
             
-            elif(infix[i] == ")"):
+            elif(exp == ")"):
                 if("(" not in listop):
                     raise Exception("Expression invalide: parenthèse non fermée")
                 else:
 
                     while(listop[-1] != "("):
-                        listnum.append(listop.pop(-1))
-                listop.pop(-1)
+                        listnum.append(listop.pop())
+                listop.pop()
 
             elif(listop == []):
-                listop.append(infix[i])
+                listop.append(exp)
 
-            elif(listop != [] and valeur_op.get(listop[-1]) >= valeur_op.get(infix[i])):
-                    listnum.append(listop.pop(-1))
-                    listop.append(infix[i])
+            elif(valeur_op.get(listop[-1]) >= valeur_op.get(exp)):
+                    listnum.append(listop.pop())
+                    listop.append(exp)
                 
 
             else:
-                listop.append(infix[i])
+                listop.append(exp)
 
     for i in range(len(listop)):
-        listnum.append(listop.pop(-1))
+        listnum.append(listop.pop())
     return listnum
 
 def evaluate_postfix(postfix:list[str]) -> float:
@@ -108,8 +103,8 @@ def evaluate_postfix(postfix:list[str]) -> float:
         while len(postfix) > 1:
             for i in range(len(postfix)):
                 if(postfix[i] in operateur):
-                    y= float(postfix[i-1])
                     x= float(postfix[i-2])
+                    y= float(postfix[i-1])
                     match postfix[i]:
                         case "+":
                             valeur = x+y
